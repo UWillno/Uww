@@ -1,24 +1,23 @@
 package com.uwillno.uww
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.documentfile.provider.DocumentFile
-import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 
 
 class MainActivity : AppCompatActivity() {
+    @SuppressLint("SdCardPath")
     private val launcherActivity = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) {
         val data = it.data?.data?.path
@@ -47,7 +46,7 @@ private lateinit var editText: EditText
         XXPermissions.with(this)
             // 申请单个权限
             .permission(Permission.MANAGE_EXTERNAL_STORAGE)
-            .request { permissions, allGranted ->
+            .request { _, _ ->
                 Toast.makeText(
                     this@MainActivity,
                     "获取权限成功",

@@ -39,14 +39,14 @@ import java.io.InputStreamReader
 
     fun dotDir(dir: String): Int {
 
-        val dir1 = addDotAfterLastSlash(dir);
+        val dir1 = addDotAfterLastSlash(dir)
         val process = ("mv  $dir $dir1").execute()
         //    val text = process.text()
-        return process.waitFor();
+        return process.waitFor()
     }
 
 fun noDotDir(dir: String): Int {
-    val dir1 = addDotAfterLastSlash(dir);
+    val dir1 = addDotAfterLastSlash(dir)
     val process = ("mv $dir1 $dir").execute()
-    return process.waitFor();
+    return process.waitFor()
 }
