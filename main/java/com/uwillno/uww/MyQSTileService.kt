@@ -2,10 +2,15 @@ package com.uwillno.uww
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
+import android.util.Log
 import androidx.annotation.RequiresApi
+
 
 @RequiresApi(Build.VERSION_CODES.N)
 class MyQSTileService:TileService() {
@@ -47,16 +52,20 @@ class MyQSTileService:TileService() {
                 qsTile.state = Tile.STATE_ACTIVE// 更改成活跃状态
                 qsTile.label = "隐藏中"
                 dirs.forEach{
-                    dotDir(it);
+                    addDotAfterLastSlash(it);
+//                    dotDir(it);
                 }
+                scan();
             }
             Tile.STATE_ACTIVE -> {
                 loadTextFromSharedPreferences()
                 qsTile.state = Tile.STATE_INACTIVE//更改成非活跃状态
                 qsTile.label = "可见中"
                 dirs.forEach{
-                noDotDir(it)
+//                noDotDir(it)
+                    restoreFromDotDir(it);
                 }
+                scan();
             }
             Tile.STATE_UNAVAILABLE -> {
 
@@ -64,5 +73,19 @@ class MyQSTileService:TileService() {
         }
         qsTile.updateTile()//更新Tile
 
+    }
+    fun scan(){
+        MediaScannerConnection.scanFile(
+            this,
+            arrayOf<String>(
+                Environment.getExternalStorageDirectory().absolutePath
+            ),
+            null
+        ) { path: String, uri: Uri? ->
+            Log.d(
+                "Scan",
+                "Done: $path"
+            )
+        }
     }
 }

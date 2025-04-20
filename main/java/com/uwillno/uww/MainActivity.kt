@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 
@@ -21,8 +22,13 @@ class MainActivity : AppCompatActivity() {
     private val launcherActivity = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) {
         val data = it.data?.data?.path
-        editText.append("/sdcard/"+data.toString().split(':')[1]+";")
-
+//        qDebug() << data;
+//        println(data)
+        val f = data.toString().split(":")[1]
+        val sd = data.toString().split(":")[0].split("/").last()
+        val p = if(sd =="primary") "/storage/emulated/0/$f;" else "/storage/$sd/$f;"
+        //        editText.append("/storage/emulated/0/"+data.toString().split(':')[1]+";")
+        editText.append(p)
     }
 
 
@@ -88,5 +94,6 @@ private lateinit var editText: EditText
 //        if(dirs !="")
         editText.setText(dirs)
     }
+
 
 }
